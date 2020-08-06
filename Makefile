@@ -14,7 +14,12 @@ SYMLINK = lns -af
 ############### LINKER SCRIPT ##########################
 
 MCU_LINKER      = STM32F411CEUX_FLASH.ld
+    # STM32F401RETX_FLASH.ld
+    # STM32F429ZITX_FLASH.ld
+
 MCU_HEADER      = -DSTM32F411xE
+    # -DSTM32F401xE
+    # -DSTM32F429xx
 
 ############### LIBRARY INCLUSION ######################
 
