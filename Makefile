@@ -38,7 +38,7 @@ CFLAGS += -ICMSIS/Include -ICMSIS/Device/ST/STM32F4xx/Include
 
 ###################################################
 
-.PHONY: build
+.PHONY: build flash clean
 
 build: 	$(PROJ_NAME).elf
 
