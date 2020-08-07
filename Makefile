@@ -8,7 +8,7 @@ OBJCOPY = $(TOOLS)-objcopy
 DUMP    = $(TOOLS)-objdump -D
 MKDIR_P = mkdir -p
 CP      = cp
-GDB 	= gdb-multiarch
+GDB 	= $(TOOLS)-gdb
 SYMLINK = lns -af
 
 ############### LINKER SCRIPT ##########################

@@ -3,30 +3,20 @@
 #endif
 #include "stm32f4xx.h"
 
-void TIM2_IRQHandler(void)
+void SysTick_Handler(void)
 {
-    // flash on update event
-    if (TIM2->SR & TIM_SR_UIF)
-        GPIOD->ODR ^= (1 << 13);
-
-    TIM2->SR = 0x0; // reset the status register
+    GPIOC->ODR ^= (1 << 13);
 }
 
 int main()
 {
     // Initialize Clock for Port C
-    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN;       // GPIOC Enable
-    RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;       // Enable TIM2 clock
+    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN;        // GPIOC Enable
 
-    GPIOC->MODER |= (1 << 26);                 // Ouput mode
+    GPIOC->MODER |= (1 << 26);                  // Ouput mode
 
-    NVIC->ISER[0] |= (1 << TIM2_IRQn); // enable the TIM2 IRQ
-
-    TIM2->PSC = 0x0; // no prescaler, timer counts up in sync with the peripheral clock
-    TIM2->DIER |= TIM_DIER_UIE; // enable update interrupt
-    TIM2->ARR = 0x01; // count to 1 (autoreload value 1)
-    TIM2->CR1 |= TIM_CR1_ARPE | TIM_CR1_CEN; // autoreload on, counter enabled
-    TIM2->EGR = 1; // trigger update event to reload timer registers
+    SysTick->LOAD = 1250000;
+    SysTick->CTRL |= (SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk);
 
     while (1);
 
