@@ -31,19 +31,8 @@ define reset
   monitor reset halt
 end
 
-define examine_hard_fault
-  set $HFSR = *(int*)(0xE000ED2C)
-  set $CFSR = *(int*)(0xE000ED28)
-  if (($HFSR >> 30) & 0x1) 
-    printf "Hard fault was forced\n"
-  end
-  if (($CFSR >> 18) & 0x1)
-    printf "Invalid PC load UsageFault, caused by an invalid PC load by EXC_RETURN\n"
-  end
-end
-
 target remote localhost:3333
 
-symbol-file build/bin/<template>.elf
+symbol-file bin/main.elf
 monitor reset halt
 layout split
