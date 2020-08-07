@@ -3,11 +3,13 @@
 #endif
 #include "stm32f4xx.h"
 
-void TIM2_IRQHandler(void) {
-  // flash on update event
-  if (TIM2->SR & TIM_SR_UIF) GPIOD->ODR ^= (1 << 13);
+void TIM2_IRQHandler(void)
+{
+    // flash on update event
+    if (TIM2->SR & TIM_SR_UIF)
+        GPIOD->ODR ^= (1 << 13);
 
-  TIM2->SR = 0x0; // reset the status register
+    TIM2->SR = 0x0; // reset the status register
 }
 
 int main()
@@ -18,7 +20,7 @@ int main()
 
     GPIOC->MODER |= (1 << 26);                 // Ouput mode
 
-    NVIC->ISER[0] |= 1<< (TIM2_IRQn); // enable the TIM2 IRQ
+    NVIC->ISER[0] |= (1 << TIM2_IRQn); // enable the TIM2 IRQ
 
     TIM2->PSC = 0x0; // no prescaler, timer counts up in sync with the peripheral clock
     TIM2->DIER |= TIM_DIER_UIE; // enable update interrupt
@@ -26,7 +28,7 @@ int main()
     TIM2->CR1 |= TIM_CR1_ARPE | TIM_CR1_CEN; // autoreload on, counter enabled
     TIM2->EGR = 1; // trigger update event to reload timer registers
 
-    while (1) GPIOD->ODR ^= (1 << 13);
+    while (1);
 
     return 0;
 }
