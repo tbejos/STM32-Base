@@ -35,7 +35,7 @@ typedef enum {GPIO_A = 0, GPIO_B = 1, GPIO_C = 2} gpio_port;
 #define PUPD_PULL_UP            0x01
 #define PUPD_PULL_DOWN          0x02
 
-/* GPIO Alternate Function GPIOx_AFRL */
+/* GPIO Alternate Function GPIOx_AFR(L/H) */
 #define ALT0                    0x00
 #define ALT1                    0x01
 #define ALT2                    0x02
@@ -58,6 +58,5 @@ void gpio_init(gpio_port port, uint8_t pin, uint8_t mode, uint8_t otype, uint8_t
 void gpio_toggle(gpio_port port, uint8_t pin);
 void gpio_write(gpio_port port, uint8_t pin, uint8_t value);
 uint8_t gpio_read(gpio_port port, uint8_t pin);
-
 
 #endif
