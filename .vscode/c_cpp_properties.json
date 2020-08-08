@@ -7,7 +7,9 @@
                 "CMSIS/Device/ST/**",
                 "kernel/include"
             ],
-            "defines": ["STM32F411xE"],
+            "defines": [
+                "STM32F411xE"
+            ],
             "compilerPath": "/usr/bin/gcc",
             "cStandard": "gnu99",
             "cppStandard": "gnu++14",
