@@ -13,9 +13,9 @@ SYMLINK = lns -af
 
 ############### LINKER SCRIPT ##########################
 
-MCU_LINKER      = STM32F411xE.ld
-
 MCU_HEADER      = STM32F411xE
+
+MCU_LINKER      = $(MCU_HEADER).ld
 
 # SRC FILES
 SRCS        = $(wildcard kernel/src/*.c)
