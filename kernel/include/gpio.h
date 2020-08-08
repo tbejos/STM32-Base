@@ -1,10 +1,6 @@
 #ifndef _GPIO_H_
 #define _GPIO_H_
 
-// For VS Code Linting Make sure to change
-#ifndef STM32F411xE
-    #define STM32F411xE
-#endif
 #include "stm32f4xx.h"
 
 /* GPIO Port */
