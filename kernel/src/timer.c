@@ -1,14 +1,12 @@
 #include "timer.h"
+#include "gpio.h"
 
 /*
  *  @brief Starts systick for ~1 second
  */
 void SysTick_Start()
 {
-        // Initialize Clock for Port C
-    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN;        // GPIOC Enable
-
-    GPIOC->MODER |= (1 << 26);                  // Ouput mode
+    gpio_init(GPIO_C, 13, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_VERY_HIGH, PUPD_NONE, ALT0);
 
     SysTick->LOAD = 1250000;
     SysTick->CTRL |= (SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk);
@@ -22,5 +20,5 @@ void SysTick_Stop()
 
 void SysTick_Handler(void)
 {
-    GPIOC->ODR ^= (1 << 13);
+    gpio_toggle(GPIO_C, 13);
 }
