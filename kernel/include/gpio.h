@@ -4,11 +4,11 @@
 #include "stm32f4xx.h"
 
 /* GPIO Port */
-typedef enum {GPIO_A = 0, GPIO_B = 1, GPIO_C = 2} gpio_port;
+typedef enum {GPIO_A = 0, GPIO_B, GPIO_C} gpio_port;
 
 /* GPIO Value */
-#define GPIO_PIN_RESET          0x00
-#define GPIO_PIN_SET            0x01
+#define PIN_LOW                 0x00
+#define PIN_HIGH                0x01
 
 /* GPIO Port Mode GPIOx_MODER */
 #define MODE_INPUT              0x00
@@ -50,9 +50,12 @@ typedef enum {GPIO_A = 0, GPIO_B = 1, GPIO_C = 2} gpio_port;
 #define ALT15                   0x0F
 
 /* Function Prototypes */
-void gpio_init(gpio_port port, uint8_t pin, uint8_t mode, uint8_t otype, uint8_t speed, uint8_t pupd, uint8_t alt);
-void gpio_toggle(gpio_port port, uint8_t pin);
-void gpio_write(gpio_port port, uint8_t pin, uint8_t value);
-uint8_t gpio_read(gpio_port port, uint8_t pin);
+void gpio_init(GPIO_TypeDef *port, uint8_t pin, uint8_t mode, uint8_t otype, uint8_t speed, uint8_t pupd, uint8_t alt);
+void gpio_toggle(GPIO_TypeDef *port, uint8_t pin);
+void gpio_set_high(GPIO_TypeDef *port, uint8_t pin);
+void gpio_set_low(GPIO_TypeDef *port, uint8_t pin);
+void gpio_set_value(GPIO_TypeDef *port, uint8_t pin, uint8_t value);
+uint8_t gpio_read_input(GPIO_TypeDef *port, uint8_t pin);
+uint8_t gpio_read_output(GPIO_TypeDef *port, uint8_t pin);
 
 #endif

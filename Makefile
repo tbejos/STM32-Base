@@ -11,7 +11,7 @@ CP      = cp
 GDB 	= $(TOOLS)-gdb
 SYMLINK = lns -af
 
-############### LINKER SCRIPT ##########################
+############### LINKER SCRIPT #####################
 
 MCU_HEADER      = STM32F411xE
 
