@@ -7,8 +7,6 @@
 #define BITS_PER_TYPE 1
 #define GPIOS_PER_ALT_REG 8
 
-const int gpio_en[] = {0x01, 0x02, 0x04, 0x08, 0x10};
-
 void gpio_init(GPIO_TypeDef *port, uint8_t pin, uint8_t mode, uint8_t otype, uint8_t speed, uint8_t pupd, uint8_t alt)
 {
     // TODO: Kind of gross
