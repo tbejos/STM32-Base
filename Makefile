@@ -25,7 +25,7 @@ PROJ_NAME=main
 
 ###################################################
 
-CFLAGS  = -std=gnu99 -g -O2 -D$(MCU_HEADER) -Wl,-Llinker,-Tlinker/$(MCU_LINKER)
+CFLAGS  = -std=gnu99 -g3 -O2 -D$(MCU_HEADER) -Wl,-Llinker,-Tlinker/$(MCU_LINKER)
 CFLAGS += -Wall -Wextra -Werror
 CFLAGS += -ffreestanding --specs=nosys.specs
 CFLAGS += -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork
