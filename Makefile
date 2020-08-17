@@ -27,7 +27,7 @@ PROJ_NAME=main
 
 CFLAGS  = -std=gnu99 -g3 -O2 -D$(MCU_HEADER) -Wl,-Llinker,-Tlinker/$(MCU_LINKER)
 CFLAGS += -Wall -Wextra -Werror
-CFLAGS += -ffreestanding --specs=nosys.specs
+CFLAGS += -ffreestanding --specs=nosys.specs --specs=nano.specs
 CFLAGS += -mlittle-endian -mthumb -mcpu=cortex-m4 -mthumb-interwork
 CFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
 
@@ -48,16 +48,16 @@ flash: 	build
 		cp util/init_template.gdb /tmp/init.gdb
 		sed -i -e 's|<template>|$(PROJ_NAME)|g' /tmp/init.gdb
 		@printf "\n"
-		@printf "$y***************************************************************\n$n"
-		@printf "$yFlashing $(PROJ_NAME) to board...\n$n"
-		@printf "$y***************************************************************\n$n"
+		@printf "***************************************************************\n"
+		@printf "Flashing $(PROJ_NAME) to board...\n"
+		@printf "***************************************************************\n"
 		cat /tmp/init.nc | nc localhost 4444
 		@printf "Opening GDB...\n"
 		$(GDB) -x /tmp/init.gdb
 
 $(PROJ_NAME).elf: $(SRCS)
 	$(MKDIR_P) bin
-	$(CC) $(CFLAGS) $^ -o bin/$@ -lc
+	$(CC) $(CFLAGS) $^ -o bin/$@
 	$(OBJCOPY) -O ihex bin/$(PROJ_NAME).elf bin/$(PROJ_NAME).hex
 	$(OBJCOPY) -O binary bin/$(PROJ_NAME).elf bin/$(PROJ_NAME).bin
 
