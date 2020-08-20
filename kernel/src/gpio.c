@@ -4,10 +4,9 @@
 #define BITS_PER_MODE 2
 #define BITS_PER_SPEED 2
 #define BITS_PER_PUPD 2
-#define BITS_PER_TYPE 1
 #define GPIOS_PER_ALT_REG 8
 
-void gpio_init(GPIO_TypeDef *port, uint8_t pin, uint8_t mode, uint8_t otype, uint8_t speed, uint8_t pupd, uint8_t alt)
+void gpio_init(GPIO_TypeDef *port, GPIO_InitStruct *init)
 {
     // TODO: Kind of gross
     switch ((uint32_t)port) {
@@ -28,15 +27,39 @@ void gpio_init(GPIO_TypeDef *port, uint8_t pin, uint8_t mode, uint8_t otype, uin
         break;
     }
 
-    port->MODER |= (mode << (pin * BITS_PER_MODE));
-    port->OTYPER |= (otype << (pin * BITS_PER_TYPE));
-    port->OSPEEDR |= (speed << (pin * BITS_PER_SPEED));
-    port->PUPDR |= (pupd << (pin * BITS_PER_PUPD));
+    uint32_t temp = 0;
 
-    uint8_t shift_val = pin % 8;
-    uint8_t high = pin >= 8;
+    /* Clear existing value then set new one */
+    temp = port->MODER;
+    temp &= ~(0x3 << (init->pin * BITS_PER_MODE));
+    temp |= init->mode << (init->pin * BITS_PER_MODE);
+    port->MODER = temp;
 
-    port->AFR[high] |= (alt << (shift_val * BITS_PER_ALT));
+    temp = port->PUPDR;
+    temp &= ~(0x3 << (init->pin * BITS_PER_PUPD));
+    temp |= init->mode << (init->pin * BITS_PER_PUPD);
+    port->PUPDR = temp;
+
+    if (init->mode == MODE_OUTPUT_PP || init->mode == MODE_OUTPUT_OD
+        || init->mode == MODE_ALT_PP || init->mode == MODE_ALT_OD) {
+
+        temp = port->OTYPER;
+        temp &= ~(0x1 << init->pin);
+        temp |= (init->mode >> 4) << init->pin;
+        port->OTYPER = temp;
+
+        temp = port->OSPEEDR;
+        temp &= ~(0x3 << (init->pin * BITS_PER_SPEED));
+        temp |= (init->speed << (init->pin * BITS_PER_SPEED));
+        port->OSPEEDR = temp;
+    }
+
+    if (init->mode == MODE_ALT_PP || init->mode == MODE_ALT_OD) {
+        temp = port->AFR[init->pin >> 3];
+        temp &= ~(0xF << ((init->pin & 0x7) * BITS_PER_ALT));
+        temp |= (init->alt << ((init->pin & 0x7) * BITS_PER_ALT));
+        port->AFR[init->pin >> 3] = temp;
+    }
 }
 
 void gpio_toggle(GPIO_TypeDef *port, uint8_t pin)
@@ -44,32 +67,13 @@ void gpio_toggle(GPIO_TypeDef *port, uint8_t pin)
     port->ODR ^= (1 << pin);
 }
 
-void gpio_set_high(GPIO_TypeDef *port, uint8_t pin)
+void gpio_write_pin(GPIO_TypeDef *port, uint32_t pin, uint8_t value)
 {
-    port->BSRR |= (1 << (pin + 0x10));
-}
-void gpio_set_low(GPIO_TypeDef *port, uint8_t pin)
-{
-    port->BSRR |= (1 << pin);
+    port->BSRR = (value) ? pin : pin << 0x10;
+    return;
 }
 
-void gpio_set_value(GPIO_TypeDef *port, uint8_t pin, uint8_t value)
+uint8_t gpio_read_pin(GPIO_TypeDef *port, uint8_t pin)
 {
-    value ? gpio_set_high(port, pin) : gpio_set_low(port, pin);
-}
-
-uint8_t gpio_read_input(GPIO_TypeDef *port, uint8_t pin)
-{
-    uint8_t value = port->IDR & (1 << pin);
-
-    // Turn it into 0 or 1 non shifted
-    return value >> pin;
-}
-
-uint8_t gpio_read_output(GPIO_TypeDef *port, uint8_t pin)
-{
-    uint8_t value = port->ODR & (1 << pin);
-
-    // Turn it into 0 or 1 non shifted
-    return value >> pin;
+    return (port->IDR & (1 << pin)) ? 1 : 0;
 }

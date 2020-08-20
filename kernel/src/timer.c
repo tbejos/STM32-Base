@@ -6,9 +6,15 @@
  */
 void SysTick_Start()
 {
-    gpio_init(GPIOC, 13, MODE_GP_OUTPUT, OUTPUT_PUSH_PULL, OUTPUT_SPEED_VERY_HIGH, PUPD_NONE, ALT0);
+    GPIO_InitStruct init = {0};
+    init.pin = 13;
+    init.mode = MODE_OUTPUT_PP;
+    init.pupd = PUPD_NONE;
+    init.speed = OUTPUT_SPEED_VERY_HIGH;
 
-    SysTick->LOAD = 1250000;
+    gpio_init(GPIOC, &init);
+
+    SysTick->LOAD = 12000000;
     SysTick->CTRL |= (SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk);
     return;
 }

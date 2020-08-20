@@ -3,8 +3,13 @@
 
 #include "stm32f4xx.h"
 
-/* GPIO Port */
-typedef enum {GPIO_A = 0, GPIO_B, GPIO_C} gpio_port;
+typedef struct {
+    uint32_t pin;        // Pin Number
+    uint32_t mode;       // Pin Mode
+    uint32_t pupd;       // Internal Pull-Up Pull-Down
+    uint32_t speed;      // GPIO Speed
+    uint32_t alt;        // Alternate Function
+} GPIO_InitStruct;
 
 /* GPIO Value */
 #define PIN_LOW                 0x00
@@ -12,13 +17,11 @@ typedef enum {GPIO_A = 0, GPIO_B, GPIO_C} gpio_port;
 
 /* GPIO Port Mode GPIOx_MODER */
 #define MODE_INPUT              0x00
-#define MODE_GP_OUTPUT          0x01
-#define MODE_ALT_FN             0x02
-#define MODE_ANALOG_INPUT       0x03
-
-/* GPIO Output Type GPIOx_OTYPER */
-#define OUTPUT_PUSH_PULL        0x00
-#define OUTPUT_OPEN_DRAIN       0x01
+#define MODE_OUTPUT_PP          0x01
+#define MODE_OUTPUT_OD          0x11    // Use upper nibble to hold OD
+#define MODE_ALT_PP             0x02
+#define MODE_ALT_OD             0x12    // Use upper nibble to hold OD
+#define MODE_ANALOG             0x03
 
 /* GPIO Ouput Speed GPIOx_OSPEEDR */
 #define OUTPUT_SPEED_LOW        0x00
@@ -50,12 +53,9 @@ typedef enum {GPIO_A = 0, GPIO_B, GPIO_C} gpio_port;
 #define ALT15                   0x0F
 
 /* Function Prototypes */
-void gpio_init(GPIO_TypeDef *port, uint8_t pin, uint8_t mode, uint8_t otype, uint8_t speed, uint8_t pupd, uint8_t alt);
+void gpio_init(GPIO_TypeDef *port, GPIO_InitStruct *init);
 void gpio_toggle(GPIO_TypeDef *port, uint8_t pin);
-void gpio_set_high(GPIO_TypeDef *port, uint8_t pin);
-void gpio_set_low(GPIO_TypeDef *port, uint8_t pin);
-void gpio_set_value(GPIO_TypeDef *port, uint8_t pin, uint8_t value);
-uint8_t gpio_read_input(GPIO_TypeDef *port, uint8_t pin);
-uint8_t gpio_read_output(GPIO_TypeDef *port, uint8_t pin);
+void gpio_write_pin(GPIO_TypeDef *port, uint32_t pin, uint8_t value);
+uint8_t gpio_read_pin(GPIO_TypeDef *port, uint8_t pin);
 
-#endif
+#endif /* _GPIO_H_ */

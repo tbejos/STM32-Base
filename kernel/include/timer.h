@@ -7,4 +7,4 @@ void SysTick_Start(void);
 void SysTick_Stop(void);
 void SysTick_Handler(void);
 
-#endif
+#endif /* _TIMER_H_ */

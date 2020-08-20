@@ -1,11 +1,13 @@
 #include "stm32f4xx.h"
 #include "timer.h"
 #include "gpio.h"
+#include "uart.h"
+#include "printk.h"
 
 #define RCC_PLLCFGR_PLLM_DIV25  (RCC_PLLCFGR_PLLM_4 | RCC_PLLCFGR_PLLM_3 | RCC_PLLCFGR_PLLM_0)
 #define RCC_PLLCFGR_PLLN_x192   (RCC_PLLCFGR_PLLN_7 | RCC_PLLCFGR_PLLN_6)
 #define RCC_PLLCFGR_PLLQ_DIV4   (RCC_PLLCFGR_PLLQ_2)
-#define RCC_PLLCFGR_PLLP_DIV2   (RCC_PLLCFGR_PLLP_0)
+#define RCC_PLLCFGR_PLLP_DIV2   0
 
 int main()
 {
@@ -31,9 +33,15 @@ int main()
     RCC->CFGR |= RCC_CFGR_SW_PLL;
     while (!(RCC->CFGR & RCC_CFGR_SWS));
 
-    SysTick_Start();
+    // System Core Clock should be 96 MHz
+    SystemCoreClockUpdate();
 
-    while (1);
+    SysTick_Start();
+    uart_init(115200);
+
+    while (1) {
+        printk("Hello World\n");
+    }
 
     return 0;
 }
