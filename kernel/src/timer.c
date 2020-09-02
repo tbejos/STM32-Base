@@ -14,8 +14,10 @@ void SysTick_Start()
 
     gpio_init(GPIOC, &init);
 
-    SysTick->LOAD = 12000000;
-    SysTick->CTRL |= (SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk);
+    // For 1ms  (uint32_t)((SystemCoreClock / 1000) - 1U);
+    SysTick->LOAD = (uint32_t)(SystemCoreClock - 1U);
+    SysTick->VAL = 0U;
+    SysTick->CTRL = (SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk);
     return;
 }
 
