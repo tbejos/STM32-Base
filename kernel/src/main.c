@@ -33,14 +33,14 @@ int main()
     RCC->CFGR |= RCC_CFGR_SW_PLL;
     while (!(RCC->CFGR & RCC_CFGR_SWS));
 
-    // System Core Clock should be 96 MHz
+    // System Core Clock should be 96 MHz (This makes APB1 48 MHz)
     SystemCoreClockUpdate();
 
     SysTick_Start();
     uart_init(115200);
 
     while (1) {
-        printk("Hello World\n");
+        // printk("Test\n");
     }
 
     return 0;

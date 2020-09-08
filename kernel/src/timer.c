@@ -14,8 +14,9 @@ void SysTick_Start()
 
     gpio_init(GPIOC, &init);
 
+    // For 1s   (uint32_t)(SystemCoreClock - 1U);
     // For 1ms  (uint32_t)((SystemCoreClock / 1000) - 1U);
-    SysTick->LOAD = (uint32_t)(SystemCoreClock - 1U);
+    SysTick->LOAD = (uint32_t)((SystemCoreClock / 1000) - 1U);
     SysTick->VAL = 0U;
     SysTick->CTRL = (SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk);
     return;
@@ -26,7 +27,16 @@ void SysTick_Stop()
     SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
 }
 
+static uint64_t milliseconds;
+
+uint64_t millis()
+{
+    return milliseconds;
+}
+
 void SysTick_Handler(void)
 {
-    gpio_toggle(GPIOC, 13);
+    milliseconds++;
+    if (milliseconds % 1000 == 0)
+        gpio_toggle(GPIOC, 13);
 }

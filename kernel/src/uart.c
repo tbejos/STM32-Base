@@ -4,10 +4,10 @@
 /** @breif Find the minimum of 2 values */
 #define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
 
+#define APB1_CLK            (SystemCoreClock >> 1)
+
 static struct buf rx_buf = { 0, 0, {0}};    /**< Recieve Buffer */
 static struct buf tx_buf = { 0, 0, {0}};    /**< Transmit Buffer */
-
-#define APB1_CLK (SystemCoreClock / 2)
 
 void uart_init(int baud)
 {
@@ -21,7 +21,7 @@ void uart_init(int baud)
     usart2.mode = MODE_ALT_PP;
     gpio_init(GPIOA, &usart2);
 
-    // RX initialize
+    // RX Initialize
     usart2.pin = 3;
     usart2.mode = MODE_ALT_OD;
     gpio_init(GPIOA, &usart2);
@@ -33,8 +33,7 @@ void uart_init(int baud)
     temp = (APB1_CLK / baud) + 1;
     USART2->BRR = temp;
 
-    USART2->CR1 |= (USART_CR1_UE | USART_CR1_TE | USART_CR1_RE);
-    USART2->CR1 |= USART_CR1_RXNEIE;
+    USART2->CR1 = (USART_CR1_UE | USART_CR1_TE | USART_CR1_RE | USART_CR1_RXNEIE);
 
     NVIC_EnableIRQ(USART2_IRQn);
 }
